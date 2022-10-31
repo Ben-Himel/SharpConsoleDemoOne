@@ -1,0 +1,8 @@
+/----------------------------------------------------------------------------\
+|Author: Ben Ryan Himel                                                      |
+|Program: Attarct Mode                                                       |
+|Programmed while training in the Microsoft Software Systems accademy (MSSA) |
+|Central Cloud Application Developer Cohort Nine (CCAD9).                    |
+|Created: 15 October 2022                                                    |
+|Last Edit date: 18 October 2022 / 1428 CST                                  |
+\----------------------------------------------------------------------------/
