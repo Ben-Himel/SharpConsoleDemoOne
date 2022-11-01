@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using static SharpConsoleDemoOne.Program;
 
 namespace SharpConsoleDemoOne
 {
@@ -10,73 +11,23 @@ namespace SharpConsoleDemoOne
             string mySig = "Signature.txt";
             string scaleHtz = "A4-440.txt";
             string scaleNotes = "Scale Notes.txt";
-            //displayFile(mySig);
-            string[,] scaleArray = inputScale(scaleNotes, scaleHtz);
+            displayFile(mySig);
+            //string[,] scaleArray = inputScale(scaleNotes, scaleHtz);
             //displayArray(scaleArray);
 
             //System.Console.Beep(329, BPMtoMS(100));
             //System.Console.Beep(329, 1000);
+
             //scale is E4 thru F5, F5 is sharp.
-            double[] scale = new double[9] { 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33, 659.25, 739.99 }; 
-
-
+            double[] scale = new double[9] { 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33, 659.25, 739.99 };
             //test song info
-            string songA = "|6q6t6t6t7q7q|8q6q7h|6q6t6t6t7q7q|8q6q8h|";
+            Console.WriteLine("Playing \"Nuttcracker Suite");
+            string songA = "6q6t6t6t7q7q|8q6q7h|6q6t6t6t7q7q|8q6q7h|";
             int bpm = 100;
+            playSong(bpm, songA, scale);
 
-            //foreach (char c in songA)
-            //{
-            //    if(c == '|') { }
-            //        //do nothing
-            //    else if (c > 0 && c < 10 )
-            //    {
-            //        egbdf[c];
-            //    }
-            //}
 
-            for (int i = 0; i < songA.Length; i++)
-            {                
-                if (char.IsDigit( songA[i] ))
-                {
-                    int beat;
-                    char time = (char)songA[i+1];
-                    switch(time)
-                    {
-                        case 'w': //whole note, 4 beats
-                            beat = bpm * 4;
-                            break;
-                        case 'h': //half note, 2 beats
-                            beat = bpm * 2;
-                            break;
-                        case 'q': //quarter, 1 beat
-                            beat = bpm;
-                            break;
-                        case 'e': //eighth  beat / 2
-                            beat = bpm / 2;
-                            break;
-                        case 't': //tripplet beat / 3
-                            beat = bpm / 3;
-                            break;
-                        case 's': //sixteenth beat / 4
-                            beat = bpm / 4;
-                            break;
-                        default:
-                            beat = bpm;
-                            break;
-                    }
-                    int ivar = Convert.ToInt32((songA[i]).ToString());
-                    //int hz = Convert.ToInt32(scale[songA[i]]);
-                    int hz = Convert.ToInt32(scale[ivar]);
-                    Console.Beep(hz, BPMtoMS(beat));                    
-                }
-                else if (songA[i] == '|')
-                {
-                    Console.WriteLine("Messure");
-                }
-            }
-
-  
-
+            
         }
 
         static void displayFile(string filePath)
@@ -90,8 +41,44 @@ namespace SharpConsoleDemoOne
                     Console.WriteLine(reader.ReadLine());
                     Thread.Sleep(50);
                 }
-                //Console.WriteLine(reader.ReadToEnd());
+                Console.ResetColor();
                 //reader.Close();
+
+                ConsoleKeyInfo loop;
+                int counter = 0;
+                do
+                {
+                    if (counter % 2 == 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        StreamReader reader2 = new StreamReader(filePath);
+                        while (!reader.EndOfStream)
+                        {
+                            Console.WriteLine(reader.ReadLine());                     
+                        }
+                        //reader.Close();
+                        Console.WriteLine("red");
+                    }
+                    else
+                    {
+                        Console.ResetColor();
+                        StreamReader reader2 = new StreamReader(filePath);
+                        while (!reader.EndOfStream)
+                        {
+                            Console.WriteLine(reader.ReadLine());
+                        }
+                        //reader.Close();
+                        Console.WriteLine("normal");
+
+                    }
+
+                    Console.WriteLine("Press space to continue");
+                    loop = Console.ReadKey();
+                } while (loop.Key != ConsoleKey.Spacebar);
+
+                
+                //Console.WriteLine(reader.ReadToEnd());
+                reader.Close();
             }
             catch (FileNotFoundException ex)
             {
@@ -148,7 +135,7 @@ namespace SharpConsoleDemoOne
                     counterA++;
                 }
                 readerNotes.Close();
-                Console.WriteLine($"{filepath} read.");
+                //Console.WriteLine($"{filepath} read.");
 
                 StreamReader readerHtz = new StreamReader(filepath2);
                 int counterB = 0;                
@@ -158,7 +145,7 @@ namespace SharpConsoleDemoOne
                     counterB++;
                 }
                 readerHtz.Close();
-                Console.WriteLine($"{filepath2} read.");
+                //Console.WriteLine($"{filepath2} read.");
 
                 //while (!reader.EndOfStream)
                 //{
@@ -234,6 +221,54 @@ namespace SharpConsoleDemoOne
 
         }
 
+        public static void playSong(int bpm, string songString, double[] scale)
+        {
+            for (int i = 0; i < songString.Length; i++)
+            {
+                if (char.IsDigit(songString[i]))
+                {
+                    int beat; // length of note in miliseconds
+                    int pause = 20;
+                    char time = (char)songString[i + 1];
+                    switch (time)
+                    {
+                        case 'w': //whole note, 4 beats
+                            beat = bpm / 4;
+                            break;
+                        case 'h': //half note, 2 beats
+                            beat = bpm / 2;
+                            break;
+                        case 'q': //quarter, 1 beat
+                            beat = bpm;
+                            break;
+                        case 'e': //eighth  beat / 2
+                            beat = bpm * 2;
+                            break;
+                        case 't': //tripplet beat / 3
+                            beat = bpm * 3;
+                            break;
+                        case 's': //sixteenth beat / 4
+                            beat = bpm * 4;
+                            break;
+                        default:
+                            beat = bpm;
+                            break;
+                    }
+                    //beat = beat - pause;
+                    int ivar = Convert.ToInt32((songString[i]).ToString());
+                    //int hz = Convert.ToInt32(scale[songA[i]]);
+                    int hz = Convert.ToInt32(scale[ivar]);
+                    Console.Beep(hz, BPMtoMS(beat) - pause);
+                    Thread.Sleep(pause);
+
+                }
+                else if (songString[i] == '|')
+                {
+                    Console.WriteLine("Messure");
+                }
+            }
+
+        }
 
     }
 }
