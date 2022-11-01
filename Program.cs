@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SharpConsoleDemoOne
 {
@@ -13,9 +14,69 @@ namespace SharpConsoleDemoOne
             string[,] scaleArray = inputScale(scaleNotes, scaleHtz);
             //displayArray(scaleArray);
 
+            //System.Console.Beep(329, BPMtoMS(100));
+            //System.Console.Beep(329, 1000);
+            //scale is E4 thru F5, F5 is sharp.
+            double[] scale = new double[9] { 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33, 659.25, 739.99 }; 
 
 
-            
+            //test song info
+            string songA = "|6q6t6t6t7q7q|8q6q7h|6q6t6t6t7q7q|8q6q8h|";
+            int bpm = 100;
+
+            //foreach (char c in songA)
+            //{
+            //    if(c == '|') { }
+            //        //do nothing
+            //    else if (c > 0 && c < 10 )
+            //    {
+            //        egbdf[c];
+            //    }
+            //}
+
+            for (int i = 0; i < songA.Length; i++)
+            {                
+                if (char.IsDigit( songA[i] ))
+                {
+                    int beat;
+                    char time = (char)songA[i+1];
+                    switch(time)
+                    {
+                        case 'w': //whole note, 4 beats
+                            beat = bpm * 4;
+                            break;
+                        case 'h': //half note, 2 beats
+                            beat = bpm * 2;
+                            break;
+                        case 'q': //quarter, 1 beat
+                            beat = bpm;
+                            break;
+                        case 'e': //eighth  beat / 2
+                            beat = bpm / 2;
+                            break;
+                        case 't': //tripplet beat / 3
+                            beat = bpm / 3;
+                            break;
+                        case 's': //sixteenth beat / 4
+                            beat = bpm / 4;
+                            break;
+                        default:
+                            beat = bpm;
+                            break;
+                    }
+                    int ivar = Convert.ToInt32((songA[i]).ToString());
+                    //int hz = Convert.ToInt32(scale[songA[i]]);
+                    int hz = Convert.ToInt32(scale[ivar]);
+                    Console.Beep(hz, BPMtoMS(beat));                    
+                }
+                else if (songA[i] == '|')
+                {
+                    Console.WriteLine("Messure");
+                }
+            }
+
+  
+
         }
 
         static void displayFile(string filePath)
@@ -155,6 +216,24 @@ namespace SharpConsoleDemoOne
             });
 
         }
+
+        //converts BPM to MS or MS to BPM
+        static int BPMtoMS(int bpm)
+        {
+            if(bpm == 0)
+                return 0;
+            else
+                return (60000 / bpm);
+        }        
+
+        public class Song
+        {
+            int _bpm;
+            string _file;
+            int _beat;
+
+        }
+
 
     }
 }
